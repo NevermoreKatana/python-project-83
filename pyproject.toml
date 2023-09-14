@@ -10,6 +10,7 @@ packages = [{include = "hexlet_code"}]
 python = "^3.11"
 Flask = "^2.3.3"
 gunicorn = "^21.2.0"
+flake8 = "^6.1.0"
 
 
 [build-system]
