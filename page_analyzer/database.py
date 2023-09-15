@@ -6,7 +6,8 @@ db_params = {
     'host': os.getenv('HOST'),
     'database': os.getenv('DATABASE'),
     'user': os.getenv('USER'),
-    'password': os.getenv('PASSWORD')
+    'password': os.getenv('PASSWORD'),
+    'port': os.getenv('PORT')
 }
 
 conn = psycopg2.connect(**db_params)
