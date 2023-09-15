@@ -1,11 +1,12 @@
 from flask import Flask, render_template, request, flash, redirect
 from page_analyzer.validator import validate
-import os
+import os, dotenv, logging
 from page_analyzer.database import add_new_url, take_url_id, take_url_info, take_all_entity
-
+dotenv.load_dotenv()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'VANYA LOVE'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.logger.setLevel(logging.DEBUG)
 
 @app.route('/', methods=['GET'])
 def index():
@@ -34,3 +35,4 @@ def show_one_url(id):
 def show_urls():
     entities = take_all_entity()
     return render_template('/urls/all_urls.html', entities = entities)
+
