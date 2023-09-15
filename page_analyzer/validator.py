@@ -1,9 +1,10 @@
-import re
+import validators
 def validate(url):
     errors = {}
-    patern = r"(http(|s)://)(|www.)([a-zA-Z0-9-]+)\.(com|ru|org)"
     if url == '':
         errors['url'] = 'URL обязателен'
-    elif re.findall(patern, url) == []:
+    elif not validators.url(url):
         errors['url'] = 'Некорректный URL'
+    elif len(url) > 255:
+        errors['url'] = 'URL превышает 255 символов'
     return errors

@@ -8,7 +8,8 @@ app.config['SECRET_KEY'] = 'VANYA LOVE'
 @app.route('/', methods=['GET'])
 def index():
     errors = {}
-    return render_template('index.html', errors=errors)
+    url =''
+    return render_template('index.html', errors=errors, url=url)
 
 
 @app.route('/urls', methods=['POST'])
@@ -17,5 +18,5 @@ def urls():
     errors = validate(url)
     if len(errors) > 0:
         flash('asdas')
-        return render_template('index.html', errors=errors), 422
-    return f'jopa suka blya == {errors}'
+        return render_template('index.html', errors=errors, url=url), 422
+    return f'tut budet analiz {url}'
