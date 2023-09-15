@@ -16,6 +16,7 @@ def availability_check_url(url):
     cursor = conn.cursor()
     cursor.execute(f"SELECT name FROM urls WHERE name = '{url}'")
     checked = cursor.fetchall()
+    cursor.close()
     if checked:
         return False
     return True
