@@ -11,5 +11,3 @@ start:
 make lint:
 	poetry run flake8 page_analyzer
 
-build:
-	./build.sh
