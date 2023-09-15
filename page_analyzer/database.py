@@ -16,7 +16,6 @@ def availability_check_url(url):
 
     cursor.execute(f"SELECT name FROM urls WHERE name = '{url}'")
     checked = cursor.fetchall()
-    cursor.close()
     if checked:
         return False
     return True
@@ -28,25 +27,22 @@ def add_new_url(url):
         fromated_time = current_time.strftime('%Y-%m-%d')
         cursor.execute(f"INSERT INTO urls (name, created_at) VALUES ('{url}', '{fromated_time}')")
         conn.commit()
-        cursor.close()
 
 
 def take_url_id(url):
     cursor.execute(f"SELECT id FROM urls WHERE name = '{url}'")
     id = cursor.fetchall()[0][0]
-    cursor.close()
     return id
 
 
 def take_url_info(id):
     cursor.execute(f"SELECT * FROM urls WHERE id = {id}")
     info = cursor.fetchall()
-    cursor.close()
     return info
 
 
 def take_all_entity():
     cursor.execute(f"SELECT * FROM urls")
     entities = cursor.fetchall()
-    cursor.close()
+
     return entities
