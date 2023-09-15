@@ -18,7 +18,6 @@
         </div>
     </nav>
 </header>
-{{entities}}
 <main class="flex-grow-1">
      <div class="container-lg mt-3">
         <h1>Сайты</h1>
@@ -33,7 +32,16 @@
                  </tr>
                  </thead>
                  <tbody>
-                 
+                 {% for item in entities %}
+                 <tr>
+                     <th>{{ item[0] }}</th>
+                     <th>
+                         <a href="/urls/{{ item[0] }}">{{ item[1] }}</a>
+                     </th>
+                     <th>jopa</th>
+                     <th>code</th>
+                 </tr>
+                 {% endfor %}
                  </tbody>
              </table>
          </div>
