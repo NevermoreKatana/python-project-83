@@ -1,15 +1,14 @@
-import psycopg2
-import datetime
+import psycopg2, datetime, os, dotenv
 
-# Настройки подключения к базе данных
+dotenv.load_dotenv()
+
 db_params = {
-    'host': 'dpg-ck23c5fhdsdc73eu1mhg-a.oregon-postgres.render.com',
-    'database': 'page_analyzer_ewxi',
-    'user': 'katana',
-    'password': 'SwlXZwrN95nrf3Sk93jXk8T2D4MSaPaS'
+    'host': os.getenv('HOST'),
+    'database': os.getenv('DATABASE'),
+    'user': os.getenv('USER'),
+    'password': os.getenv('PASSWORD')
 }
 
-# Устанавливаем соединение с базой данных
 conn = psycopg2.connect(**db_params)
 
 
