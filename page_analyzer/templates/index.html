@@ -19,9 +19,11 @@
     </nav>
 </header>
 
-{%if errors.url%}
-<div class="alert alert-danger" role="alert">{{errors.url}}</div>
-{%endif%}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+<div class="alert alert-danger" role="alert">{{ messages[0] }}</div>
+    {% endif %}
+{% endwith %}
 <main class="flex-grow-1">
     <div class="container-lg mt-3">
         <h1></h1>

@@ -18,7 +18,12 @@
         </div>
     </nav>
 </header>
-<div class="alert alert-success" role="alert"></div>
+{#<div class="alert alert-success" role="alert"></div>#}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+<div class="alert alert-danger" role="alert">{{ messages[0] }}</div>
+    {% endif %}
+{% endwith %}
 <main class="flex-grow-1">
     <div class="container-lg mt-3">
         <h1>Сайт: {{url[0][1]}}</h1>
