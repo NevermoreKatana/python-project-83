@@ -60,6 +60,7 @@ def urls_id_checks(id):
         flash(errors)
         return redirect(f'/urls/{id}')
     add_new_check(id, status_code, h1, title, description)
+    flash('Страница успешно проверена')
     return redirect(f'/urls/{id}')
 
 

@@ -24,8 +24,10 @@
 <div class="alert alert-success" role="alert">{{ messages[0].added }}</div>
         {% elif messages[0].exists %}
 <div class="alert alert-info" role="alert">{{ messages[0].exists }}</div>
-        {% else %}
+        {% elif  messages[0].danger  %}
         <div class="alert alert-danger" role="alert">{{ messages[0].danger }}</div>
+        {% else %}
+        <div class="alert alert-success" role="alert">{{ messages[0] }}</div>
         {% endif %}
     {% endif %}
 {% endwith %}
