@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
+
 def check_url(url):
     errors = {}
     status_code = None
@@ -10,7 +11,7 @@ def check_url(url):
 
     try:
         response = requests.get(url)
-        response.raise_for_status()  # Генерировать исключение, если получен неправильный статус код
+        response.raise_for_status()
         status_code = response.status_code
         soup = BeautifulSoup(response.text, 'html.parser')
         title_tag = soup.find('title')

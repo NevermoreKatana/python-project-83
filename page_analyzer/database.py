@@ -1,4 +1,7 @@
-import psycopg2, datetime, os, dotenv
+import psycopg2
+import datetime
+import os
+import dotenv
 
 dotenv.load_dotenv()
 
@@ -26,7 +29,9 @@ def add_new_url(url):
             with conn.cursor() as cursor:
                 current_time = datetime.datetime.now()
                 fromated_time = current_time.strftime('%Y-%m-%d')
-                cursor.execute(f"INSERT INTO urls (name, created_at) VALUES ('{url}', '{fromated_time}')")
+                cursor.execute(f"INSERT INTO urls "
+                               f"(name, created_at)"
+                               f" VALUES ('{url}', '{fromated_time}')")
                 conn.commit()
 
 
@@ -36,14 +41,18 @@ def add_new_check(id, status_code, h1, title, description):
             current_time = datetime.datetime.now()
             fromated_time = current_time.strftime('%Y-%m-%d')
             cursor.execute(f"INSERT INTO url_checks "
-                           f"(url_id, status_code, h1, title, description,  created_at) "
-                           f"VALUES ('{id}', '{status_code}', '{h1}', '{title}', '{description}', '{fromated_time}')")
+                           f"(url_id, status_code, h1,"
+                           f" title, description,  created_at) "
+                           f"VALUES ('{id}', '{status_code}', '{h1}',"
+                           f" '{title}', '{description}', '{fromated_time}')")
 
 
 def take_url_checks_info(id):
     with psycopg2.connect(**db_params) as conn:
         with conn.cursor() as cursor:
-            cursor.execute(f"SELECT * FROM url_checks WHERE url_id = '{id}' ORDER BY created_at")
+            cursor.execute(f"SELECT * FROM url_checks"
+                           f" WHERE url_id = '{id}' "
+                           f"ORDER BY created_at")
             info = cursor.fetchall()
             return info
 
@@ -67,6 +76,15 @@ def take_url_info(id):
 def take_all_entity():
     with psycopg2.connect(**db_params) as conn:
         with conn.cursor() as cursor:
-            cursor.execute(f"    SELECT u.id, u.name, uc.status_code, uc.created_at FROM urls u LEFT JOIN ( SELECT url_id, status_code, created_at, ROW_NUMBER() OVER (PARTITION BY url_id ORDER BY created_at DESC) AS rn FROM url_checks) uc ON u.id = uc.url_id AND uc.rn = 1")
+            cursor.execute("""
+                SELECT u.id, u.name, uc.status_code, uc.created_at
+                FROM urls u
+                LEFT JOIN (
+                    SELECT url_id, status_code, created_at, ROW_NUMBER() OVER
+                     (PARTITION BY url_id ORDER BY created_at DESC) AS rn
+                    FROM url_checks
+                ) uc ON u.id = uc.url_id AND uc.rn = 1
+            """)
+
             info = cursor.fetchall()
             return info
