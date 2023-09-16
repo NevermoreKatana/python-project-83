@@ -55,7 +55,7 @@ def show_one_url(id):
 @app.route('/urls/<id>/checks', methods=['POST'])
 def urls_id_checks(id):
     url = take_url_info(id)[0][1]
-    errors,  status_code, h1, title, description = check_url(url)
+    errors, status_code, h1, title, description = check_url(url)
     if errors:
         flash(errors)
         return redirect(f'/urls/{id}')
