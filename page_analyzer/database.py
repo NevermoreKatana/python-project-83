@@ -22,9 +22,8 @@ def add_new_url(url):
         with conn.cursor() as cursor:
             current_time = datetime.datetime.now()
             fromated_time = current_time.strftime('%Y-%m-%d')
-            cursor.execute(f"INSERT INTO urls "
-                            f"(name, created_at)"
-                            f" VALUES ('{url}', '{fromated_time}')")
+            cursor.execute(f"INSERT INTO urls (name, created_at)"
+                           f" VALUES ('{url}', '{fromated_time}')")
             conn.commit()
 
 
