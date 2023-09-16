@@ -45,7 +45,7 @@ def take_url_checks_info(id):
         with conn.cursor() as cursor:
             cursor.execute(f"SELECT * FROM url_checks"
                            f" WHERE url_id = '{id}' "
-                           f"ORDER BY created_at")
+                           f"ORDER BY id DESC ")
             info = cursor.fetchall()
             return info
 
