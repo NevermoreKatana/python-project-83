@@ -25,21 +25,21 @@
              <table class="table table-bordered table-hover text-nowrap" data-test="urls">
                  <thead>
                  <tr>
-                     <th>ID</th>
-                     <th>Имя</th>
-                     <th>Последняя проверка</th>
-                     <th>Код ответа</th>
+                     <td>ID</td>
+                     <td>Имя</td>
+                     <td>Последняя проверка</td>
+                     <td>Код ответа</td>
                  </tr>
                  </thead>
                  <tbody>
-                 {% for item in entities %}
+                 {% for item in info %}
                  <tr>
-                     <th>{{ item[0] }}</th>
-                     <th>
-                         <a href="/urls/{{ item[0] }}">{{ item[1] }}</a>
-                     </th>
-                     <th>jopa</th>
-                     <th>code</th>
+                     <td>{{ item[0] }}</td>
+                     <td>
+                         <a href="/urls/{{ item[0] }}">{{ item[3] }}</a>
+                     </td>
+                     <td>{{ item[2] }}</td>
+                     <td>{{ item[1]}}</td>
                  </tr>
                  {% endfor %}
                  </tbody>
