@@ -12,7 +12,6 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
 @app.route('/', methods=['GET'])
 def index():
-    errors = {}
     url =''
     return render_template('index.html', url=url)
 
@@ -20,11 +19,11 @@ def index():
 @app.route('/urls', methods=['POST'])
 def urls():
     url = request.form.get('url')
-    parse = urlparse(url)
     errors = validate(url)
     if errors:
-        flash(errors['url'])
+        flash(errors)
         return render_template('index.html', url=url), 422
+    parse = urlparse(url)
     url = parse.scheme + '://' + parse.netloc
     add_new_url(url)
     id = take_url_id(url)
@@ -34,7 +33,7 @@ def urls():
 def show_one_url(id):
     info_about_url = take_url_info(id)
     checks_info = take_url_checks_info(id)
-    return render_template('/urls/one.html', url = info_about_url, checks_info=checks_info)
+    return render_template('/urls/one.html', url=info_about_url, checks_info=checks_info)
 
 
 @app.route('/urls/<id>/checks', methods=['POST'])

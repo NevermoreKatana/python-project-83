@@ -23,6 +23,6 @@ def check_url(url):
         if meta_description:
             description = meta_description['content']
     except requests.exceptions.RequestException:
-        errors['danger'] = f'Произошла ошибка при проверке'
+        errors['danger'] = 'Произошла ошибка при проверке'
 
     return errors, status_code, h1, title, description
