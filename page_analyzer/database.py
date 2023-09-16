@@ -4,17 +4,11 @@ import os
 import dotenv
 
 dotenv.load_dotenv()
-
-db_params = {
-    'host': os.getenv('HOST'),
-    'database': os.getenv('DATABASE'),
-    'user': os.getenv('USER'),
-    'password': os.getenv('PASSWORD')
-}
+DATABASE_URL = os.getenv('DATABASE_URL')
 
 
 def availability_check_url(url):
-    with psycopg2.connect(**db_params) as conn:
+    with psycopg2.connect(DATABASE_URL) as conn:
         with conn.cursor() as cursor:
             cursor.execute(f"SELECT name FROM urls WHERE name = '{url}'")
             checked = cursor.fetchall()
@@ -24,7 +18,7 @@ def availability_check_url(url):
 
 
 def add_new_url(url):
-    with psycopg2.connect(**db_params) as conn:
+    with psycopg2.connect(DATABASE_URL) as conn:
         with conn.cursor() as cursor:
             current_time = datetime.datetime.now()
             fromated_time = current_time.strftime('%Y-%m-%d')
@@ -35,7 +29,7 @@ def add_new_url(url):
 
 
 def add_new_check(id, status_code, h1, title, description):
-    with psycopg2.connect(**db_params) as conn:
+    with psycopg2.connect(DATABASE_URL) as conn:
         with conn.cursor() as cursor:
             current_time = datetime.datetime.now()
             fromated_time = current_time.strftime('%Y-%m-%d')
@@ -47,7 +41,7 @@ def add_new_check(id, status_code, h1, title, description):
 
 
 def take_url_checks_info(id):
-    with psycopg2.connect(**db_params) as conn:
+    with psycopg2.connect(DATABASE_URL) as conn:
         with conn.cursor() as cursor:
             cursor.execute(f"SELECT * FROM url_checks"
                            f" WHERE url_id = '{id}' "
@@ -57,7 +51,7 @@ def take_url_checks_info(id):
 
 
 def take_url_id(url):
-    with psycopg2.connect(**db_params) as conn:
+    with psycopg2.connect(DATABASE_URL) as conn:
         with conn.cursor() as cursor:
             cursor.execute(f"SELECT id FROM urls WHERE name = '{url}'")
             id = cursor.fetchall()[0][0]
@@ -65,7 +59,7 @@ def take_url_id(url):
 
 
 def take_url_info(id):
-    with psycopg2.connect(**db_params) as conn:
+    with psycopg2.connect(DATABASE_URL) as conn:
         with conn.cursor() as cursor:
             cursor.execute(f"SELECT * FROM urls WHERE id = {id}")
             info = cursor.fetchall()
@@ -73,7 +67,7 @@ def take_url_info(id):
 
 
 def take_all_entity():
-    with psycopg2.connect(**db_params) as conn:
+    with psycopg2.connect(DATABASE_URL) as conn:
         with conn.cursor() as cursor:
             cursor.execute("""
                 SELECT u.id, u.name, uc.status_code, uc.created_at
