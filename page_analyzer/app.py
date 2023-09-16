@@ -14,7 +14,7 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 def index():
     errors = {}
     url =''
-    return render_template('index.html', errors=errors, url=url)
+    return render_template('index.html', url=url)
 
 
 @app.route('/urls', methods=['POST'])
