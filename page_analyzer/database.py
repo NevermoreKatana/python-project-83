@@ -2,81 +2,97 @@ import psycopg2
 import datetime
 import os
 import dotenv
+from psycopg2 import pool
 
 dotenv.load_dotenv()
 DATABASE_URL = os.getenv('DATABASE_URL')
 
+# Создание пула соединений
+connection_pool = pool.SimpleConnectionPool(1, 10, DATABASE_URL)
+
+def get_connection():
+    return connection_pool.getconn()
+
+def release_connection(conn):
+    connection_pool.putconn(conn)
 
 def availability_check_url(url):
-    with psycopg2.connect(DATABASE_URL) as conn:
+    conn = get_connection()
+    try:
         with conn.cursor() as cursor:
-            cursor.execute(f"SELECT name FROM urls WHERE name = '{url}'")
+            cursor.execute("SELECT name FROM urls WHERE name = %s", (url,))
             checked = cursor.fetchall()
-            if checked:
-                return False
-            return True
-
+            return not checked
+    finally:
+        release_connection(conn)
 
 def add_new_url(url):
-    with psycopg2.connect(DATABASE_URL) as conn:
+    conn = get_connection()
+    try:
         with conn.cursor() as cursor:
             current_time = datetime.datetime.now()
-            fromated_time = current_time.strftime('%Y-%m-%d')
-            cursor.execute(f"INSERT INTO urls (name, created_at)"
-                           f" VALUES ('{url}', '{fromated_time}')")
+            formatted_time = current_time.strftime('%Y-%m-%d')
+            cursor.execute("INSERT INTO urls (name, created_at) VALUES (%s, %s)", (url, formatted_time))
             conn.commit()
-
+    finally:
+        release_connection(conn)
 
 def add_new_check(id, status_code, h1, title, description):
-    with psycopg2.connect(DATABASE_URL) as conn:
+    conn = get_connection()
+    try:
         with conn.cursor() as cursor:
             current_time = datetime.datetime.now()
-            fromated_time = current_time.strftime('%Y-%m-%d')
-            cursor.execute(f"INSERT INTO url_checks "
-                           f"(url_id, status_code, h1,"
-                           f" title, description,  created_at) "
-                           f"VALUES ('{id}', '{status_code}', '{h1}',"
-                           f" '{title}', '{description}', '{fromated_time}')")
-
+            formatted_time = current_time.strftime('%Y-%m-%d')
+            cursor.execute("INSERT INTO url_checks (url_id, status_code, h1, title, description, created_at) VALUES (%s, %s, %s, %s, %s, %s)",
+                           (id, status_code, h1, title, description, formatted_time))
+            conn.commit()
+    finally:
+        release_connection(conn)
 
 def take_url_checks_info(id):
-    with psycopg2.connect(DATABASE_URL) as conn:
+    conn = get_connection()
+    try:
         with conn.cursor() as cursor:
-            cursor.execute(f"SELECT * FROM url_checks"
-                           f" WHERE url_id = '{id}' "
-                           f"ORDER BY id DESC ")
+            cursor.execute("SELECT * FROM url_checks WHERE url_id = %s ORDER BY id DESC", (id,))
             info = cursor.fetchall()
             return info
-
+    finally:
+        release_connection(conn)
 
 def take_url_id(url):
-    with psycopg2.connect(DATABASE_URL) as conn:
+    conn = get_connection()
+    try:
         with conn.cursor() as cursor:
-            cursor.execute(f"SELECT id FROM urls WHERE name = '{url}'")
-            id = cursor.fetchall()[0][0]
-            return id
-
+            cursor.execute("SELECT id FROM urls WHERE name = %s", (url,))
+            id = cursor.fetchone()
+            return id[0] if id else None
+    finally:
+        release_connection(conn)
 
 def take_url_info(id):
-    with psycopg2.connect(DATABASE_URL) as conn:
+    conn = get_connection()
+    try:
         with conn.cursor() as cursor:
-            cursor.execute(f"SELECT * FROM urls WHERE id = {id}")
+            cursor.execute("SELECT * FROM urls WHERE id = %s", (id,))
             info = cursor.fetchall()
             return info
-
+    finally:
+        release_connection(conn)
 
 def take_all_entity():
-    with psycopg2.connect(DATABASE_URL) as conn:
+    conn = get_connection()
+    try:
         with conn.cursor() as cursor:
             cursor.execute("""
                 SELECT u.id, u.name, uc.status_code, uc.created_at
                 FROM urls u
                 LEFT JOIN (
                     SELECT url_id, status_code, created_at, ROW_NUMBER() OVER
-                     (PARTITION BY url_id ORDER BY created_at DESC) AS rn
+                    (PARTITION BY url_id ORDER BY created_at DESC) AS rn
                     FROM url_checks
                 ) uc ON u.id = uc.url_id AND uc.rn = 1
             """)
-
             info = cursor.fetchall()
             return info
+    finally:
+        release_connection(conn)
