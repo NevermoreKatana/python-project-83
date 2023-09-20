@@ -1,4 +1,3 @@
-import psycopg2
 import datetime
 import os
 import dotenv
@@ -10,11 +9,14 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 # Создание пула соединений
 connection_pool = pool.SimpleConnectionPool(1, 10, DATABASE_URL)
 
+
 def get_connection():
     return connection_pool.getconn()
 
+
 def release_connection(conn):
     connection_pool.putconn(conn)
+
 
 def availability_check_url(url):
     conn = get_connection()
@@ -26,6 +28,7 @@ def availability_check_url(url):
     finally:
         release_connection(conn)
 
+
 def add_new_url(url):
     conn = get_connection()
     try:
@@ -36,6 +39,7 @@ def add_new_url(url):
             conn.commit()
     finally:
         release_connection(conn)
+
 
 def add_new_check(id, status_code, h1, title, description):
     conn = get_connection()
@@ -49,6 +53,7 @@ def add_new_check(id, status_code, h1, title, description):
     finally:
         release_connection(conn)
 
+
 def take_url_checks_info(id):
     conn = get_connection()
     try:
@@ -58,6 +63,7 @@ def take_url_checks_info(id):
             return info
     finally:
         release_connection(conn)
+
 
 def take_url_id(url):
     conn = get_connection()
@@ -69,6 +75,7 @@ def take_url_id(url):
     finally:
         release_connection(conn)
 
+
 def take_url_info(id):
     conn = get_connection()
     try:
@@ -78,6 +85,7 @@ def take_url_info(id):
             return info
     finally:
         release_connection(conn)
+
 
 def take_all_entity():
     conn = get_connection()
