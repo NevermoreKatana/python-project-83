@@ -55,10 +55,18 @@ def show_one_url(id):
 @app.route('/urls/<id>/checks', methods=['POST'])
 def urls_id_checks(id):
     url = take_url_info(id)[0][1]
-    errors, status_code, h1, title, description = check_url(url)
+    result = check_url(url)
+
+    errors = result['errors']
+    status_code = result['status_code']
+    h1 = result['h1']
+    title = result['title']
+    description = result['description']
+
     if errors:
         flash(errors)
         return redirect(f'/urls/{id}')
+
     add_new_check(id, status_code, h1, title, description)
     flash('Страница успешно проверена')
     return redirect(f'/urls/{id}')
