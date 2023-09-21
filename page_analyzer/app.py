@@ -76,3 +76,8 @@ def urls_id_checks(id):
 def show_urls():
     info = take_all_entity()
     return render_template('/urls/all_urls.html', info=info)
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('error.html')
