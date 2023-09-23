@@ -92,13 +92,11 @@ def take_all_entity():
     try:
         with conn.cursor() as cursor:
             cursor.execute("""
-                SELECT u.id, u.name, uc.status_code, uc.created_at
-                FROM urls u
-                LEFT JOIN (
-                    SELECT url_id, status_code, created_at, ROW_NUMBER() OVER
-                    (PARTITION BY url_id ORDER BY created_at DESC) AS rn
-                    FROM url_checks
-                ) uc ON u.id = uc.url_id AND uc.rn = 1
+            SELECT u.id, u.name, uc.status_code AS "Код ответа", MAX(uc.created_at) AS "Последняя проверка"
+            FROM urls u
+            LEFT JOIN url_checks uc ON u.id = uc.url_id
+            GROUP BY u.id, u.name, uc.status_code
+            ORDER BY u.id;
             """)
             info = cursor.fetchall()
             return info
