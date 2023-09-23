@@ -17,13 +17,13 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
 
-@app.route('/', methods=['GET'])
+@app.route('/', methods=['GET'], endpoint='index')
 def index():
     url = ''
     return render_template('index.html', url=url)
 
 
-@app.route('/urls', methods=['POST'])
+@app.route('/urls', methods=['POST'], endpoint='urls')
 def urls():
     url_status = {}
     url = request.form.get('url')
@@ -43,7 +43,7 @@ def urls():
     return redirect(f'/urls/{id}')
 
 
-@app.route('/urls/<id>', methods=['GET'])
+@app.route('/urls/<id>', methods=['GET'], endpoint='url')
 def show_one_url(id):
     info_about_url = take_url_info(id)
     checks_info = take_url_checks_info(id)
