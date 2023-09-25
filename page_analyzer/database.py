@@ -92,7 +92,7 @@ def take_all_entity():
     try:
         with conn.cursor() as cursor:
             cursor.execute("""
-            SELECT u.id, u.name, uc.status_code AS "Код ответа", MAX(uc.created_at) AS "Последняя проверка"
+            SELECT u.id, u.name, uc.status_code AS "status code", MAX(uc.created_at) AS "last check"
             FROM urls u
             LEFT JOIN url_checks uc ON u.id = uc.url_id
             GROUP BY u.id, u.name, uc.status_code
